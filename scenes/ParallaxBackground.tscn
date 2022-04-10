@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://sprites/background-sheet.png" type="Texture" id=1]
+[ext_resource path="res://scripts/ParallaxBackground.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Default"
+length = 0.9
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[node name="ParallaxBackground" type="ParallaxBackground"]
+scroll_limit_end = Vector2( 0, 1440 )
+script = ExtResource( 2 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2( 0, 288 )
+
+[node name="Background-sheet" type="Sprite" parent="ParallaxLayer"]
+texture = ExtResource( 1 )
+centered = false
+hframes = 9
+
+[node name="bgAnim" type="AnimationPlayer" parent="ParallaxLayer/Background-sheet"]
+autoplay = "Default"
+playback_speed = 0.3
+anims/Default = SubResource( 1 )
+anims/RESET = SubResource( 2 )

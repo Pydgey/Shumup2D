@@ -1,0 +1,85 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://sounds/explosion_sound_1.wav" type="AudioStream" id=1]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Node2D
+
+
+func _ready():
+	$Particles.emitting = true
+	$sparks.emitting = true
+	$audio.play()
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+#	if not $Particles.emitting and not $sparks.emitting:
+#		queue_free()
+	pass
+
+
+func _on_audio_finished():
+	if not $Particles.emitting and not $sparks.emitting:
+		queue_free()
+	pass # Replace with function body.
+"
+
+[sub_resource type="CanvasItemMaterial" id=5]
+blend_mode = 1
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.354545, 0.718182, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 0.905882, 0.843137, 0.0784314, 1, 0.92549, 0.0980392, 0.0980392, 1, 1, 0.027451, 0.027451, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 50.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 40.0
+scale = 3.0
+color = Color( 1, 0.996078, 0.996078, 1 )
+color_ramp = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 90.0
+initial_velocity_random = 0.81
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+color = Color( 0.882353, 0.984314, 0.0392157, 1 )
+
+[node name="explosion" type="Node2D"]
+script = SubResource( 4 )
+
+[node name="Particles" type="Particles2D" parent="."]
+material = SubResource( 5 )
+emitting = false
+amount = 70
+one_shot = true
+explosiveness = 0.94
+process_material = SubResource( 3 )
+
+[node name="sparks" type="Particles2D" parent="."]
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 0.74
+process_material = SubResource( 6 )
+
+[node name="audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+volume_db = -6.0
+mix_target = 1
+bus = "Sounds"
+
+[connection signal="finished" from="audio" to="." method="_on_audio_finished"]

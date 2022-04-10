@@ -1,0 +1,370 @@
+[gd_scene load_steps=38 format=2]
+
+[ext_resource path="res://scripts/Camera.gd" type="Script" id=1]
+[ext_resource path="res://scripts/ship.gd" type="Script" id=2]
+[ext_resource path="res://scripts/Background.gd" type="Script" id=3]
+[ext_resource path="res://sprites/background.png" type="Texture" id=4]
+[ext_resource path="res://sprites/spaceShip.png" type="Texture" id=5]
+[ext_resource path="res://scripts/inimigos.gd" type="Script" id=6]
+[ext_resource path="res://scripts/lazeres.gd" type="Script" id=7]
+[ext_resource path="res://fonts/PrStart.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://scripts/HUD.gd" type="Script" id=9]
+[ext_resource path="res://scenes/LifeBar.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scripts/contagem.gd" type="Script" id=11]
+[ext_resource path="res://scripts/Game.gd" type="Script" id=12]
+[ext_resource path="res://sounds/trilha2_2.wav" type="AudioStream" id=13]
+[ext_resource path="res://sounds/trilha1_1.wav" type="AudioStream" id=14]
+[ext_resource path="res://scripts/itens.gd" type="Script" id=15]
+[ext_resource path="res://sprites/gamepad/config/shadedDark31.png" type="Texture" id=16]
+[ext_resource path="res://scenes/Gamepad.tscn" type="PackedScene" id=17]
+[ext_resource path="res://sprites/gamepad/transparentDark22.png" type="Texture" id=18]
+[ext_resource path="res://sprites/gamepad/config/transparentDark29.png" type="Texture" id=19]
+[ext_resource path="res://sprites/gamepad/shadedDark24.png" type="Texture" id=20]
+[ext_resource path="res://sprites/gamepad/config/shadedDark17.png" type="Texture" id=21]
+[ext_resource path="res://sprites/gamepad/config/shadedDark13.png" type="Texture" id=22]
+[ext_resource path="res://sprites/gamepad/config/transparentDark13.png" type="Texture" id=23]
+[ext_resource path="res://sprites/gamepad/config/transparentDark17.png" type="Texture" id=24]
+[ext_resource path="res://fonts/prstartk.ttf" type="DynamicFontData" id=25]
+
+[sub_resource type="Shader" id=4]
+code = "
+shader_type canvas_item;
+
+uniform float vel = .5f;
+uniform float des = 0f;
+uniform float time = 0f;
+
+void fragment(){
+	COLOR = texture(TEXTURE, UV + (vec2(0,-1f) * time * vel) + vec2(des,0) );
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+shader_param/vel = 0.5
+shader_param/des = 0.0
+shader_param/time = 0.0
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Ship:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "fogo"
+length = 0.09
+loop = true
+step = 0.03
+tracks/0/type = "value"
+tracks/0/path = NodePath("Ship:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.03, 0.06 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 22.0227
+
+[sub_resource type="DynamicFont" id=7]
+size = 10
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFontData" id=9]
+font_path = "res://fonts/PrStart.ttf"
+
+[sub_resource type="DynamicFont" id=10]
+size = 30
+outline_color = Color( 0.858824, 0.109804, 0.109804, 1 )
+font_data = SubResource( 9 )
+
+[sub_resource type="DynamicFontData" id=11]
+font_path = "res://fonts/prstartk.ttf"
+
+[sub_resource type="DynamicFont" id=12]
+size = 20
+font_data = SubResource( 11 )
+
+[sub_resource type="DynamicFont" id=14]
+size = 31
+font_data = ExtResource( 25 )
+
+[sub_resource type="GradientTexture" id=13]
+
+[node name="game" type="Node2D"]
+pause_mode = 1
+script = ExtResource( 12 )
+
+[node name="Background" type="Sprite" parent="."]
+pause_mode = 1
+material = SubResource( 5 )
+position = Vector2( -1, -1 )
+scale = Vector2( 1.01875, 1.00694 )
+texture = ExtResource( 4 )
+centered = false
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+nave = NodePath("../ship")
+
+[node name="ship" type="Node2D" parent="." groups=["player"]]
+pause_mode = 1
+position = Vector2( 80, 264 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 2 )
+lazeres = NodePath("../cenario")
+
+[node name="Ship" type="Sprite" parent="ship"]
+texture = ExtResource( 5 )
+hframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ship"]
+autoplay = "fogo"
+anims/RESET = SubResource( 2 )
+anims/fogo = SubResource( 3 )
+
+[node name="Blaster" type="Position2D" parent="ship"]
+position = Vector2( 0, -26 )
+
+[node name="Area" type="Area2D" parent="ship"]
+collision_mask = 12
+
+[node name="collid" type="CollisionShape2D" parent="ship/Area"]
+position = Vector2( 0, -3 )
+shape = SubResource( 8 )
+
+[node name="Blaster1" type="Position2D" parent="ship"]
+position = Vector2( 20, -16 )
+
+[node name="Blaster2" type="Position2D" parent="ship"]
+position = Vector2( -20, -16 )
+
+[node name="busterTimer" type="Position2D" parent="ship"]
+position = Vector2( 0, 28 )
+
+[node name="cenario" type="Node2D" parent="."]
+pause_mode = 1
+position = Vector2( 2, 1 )
+script = ExtResource( 7 )
+nave = NodePath("../ship")
+
+[node name="inimigos" type="Node2D" parent="cenario" groups=["inimigos"]]
+position = Vector2( -2, -1 )
+script = ExtResource( 6 )
+
+[node name="spawn_timer" type="Timer" parent="cenario/inimigos"]
+
+[node name="boss_timer" type="Timer" parent="cenario/inimigos"]
+
+[node name="trilha" type="AudioStreamPlayer" parent="cenario/inimigos"]
+pause_mode = 2
+stream = ExtResource( 14 )
+bus = "Music"
+
+[node name="trilha2" type="AudioStreamPlayer" parent="cenario/inimigos"]
+pause_mode = 2
+stream = ExtResource( 13 )
+bus = "Music"
+
+[node name="itens" type="Node2D" parent="cenario"]
+script = ExtResource( 15 )
+
+[node name="SpawCura" type="Timer" parent="cenario/itens"]
+
+[node name="SpawUpgrade" type="Timer" parent="cenario/itens"]
+
+[node name="Camera" type="Camera2D" parent="." groups=["camera"]]
+anchor_mode = 0
+current = true
+script = ExtResource( 1 )
+
+[node name="HUD" type="CanvasLayer" parent="." groups=["score"]]
+pause_mode = 2
+script = ExtResource( 9 )
+
+[node name="score" type="Label" parent="HUD" groups=["persist"]]
+margin_left = 4.0
+margin_top = 276.0
+margin_right = 160.0
+margin_bottom = 288.0
+custom_colors/font_color = Color( 0.968627, 0.968627, 0.968627, 1 )
+custom_colors/font_outline_modulate = Color( 0.784314, 0.941176, 0.0588235, 1 )
+custom_colors/font_color_shadow = Color( 0.054902, 0.411765, 0.843137, 1 )
+custom_fonts/font = SubResource( 7 )
+text = "00"
+
+[node name="Timer" type="Timer" parent="HUD"]
+wait_time = 2.0
+
+[node name="contagem" type="Node2D" parent="HUD"]
+pause_mode = 2
+script = ExtResource( 11 )
+
+[node name="label" type="Label" parent="HUD/contagem"]
+margin_left = -1.0
+margin_top = 3.0
+margin_right = 160.0
+margin_bottom = 289.0
+custom_colors/font_color = Color( 0.72549, 0.768627, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0.521569, 0.0313726, 0.592157, 1 )
+custom_colors/font_color_shadow = Color( 0.878431, 0.972549, 0.0509804, 1 )
+custom_constants/shadow_offset_x = 3
+custom_constants/line_spacing = 0
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 0
+custom_fonts/font = SubResource( 10 )
+text = "3"
+align = 1
+valign = 1
+
+[node name="Timer" type="Timer" parent="HUD/contagem"]
+wait_time = 0.7
+autostart = true
+
+[node name="ranking" type="Node2D" parent="HUD"]
+visible = false
+position = Vector2( 0, -61 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="valor" type="Label" parent="HUD/ranking" groups=["Saved"]]
+margin_right = 161.0
+margin_bottom = 288.0
+custom_colors/font_color = Color( 0.156863, 0.0666667, 0.964706, 1 )
+custom_colors/font_color_shadow = Color( 0.945098, 0.0431373, 0.819608, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/line_spacing = 0
+custom_fonts/font = SubResource( 12 )
+text = "000000"
+align = 1
+valign = 1
+
+[node name="score" type="Label" parent="HUD/ranking"]
+margin_top = -28.0
+margin_right = 161.0
+margin_bottom = 260.0
+custom_colors/font_color = Color( 0.286275, 0.913725, 0.176471, 1 )
+custom_colors/font_color_shadow = Color( 0.92549, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 0
+custom_constants/shadow_as_outline = 0
+custom_fonts/font = SubResource( 12 )
+text = "Score:"
+align = 1
+valign = 1
+
+[node name="botoes" type="Node2D" parent="HUD/ranking"]
+
+[node name="LifeBar" parent="." instance=ExtResource( 10 )]
+position = Vector2( 8, 248 )
+
+[node name="Gamepad" parent="." instance=ExtResource( 17 )]
+pause_mode = 2
+
+[node name="configs" type="Node2D" parent="."]
+pause_mode = 2
+
+[node name="config" type="TouchScreenButton" parent="configs"]
+modulate = Color( 1, 1, 1, 0.764706 )
+position = Vector2( 136, 7 )
+scale = Vector2( 0.354167, 0.333333 )
+normal = ExtResource( 16 )
+pressed = ExtResource( 19 )
+
+[node name="Label" type="Label" parent="configs/config"]
+visible = false
+margin_left = -265.412
+margin_top = 234.0
+margin_right = -56.4117
+margin_bottom = 324.0
+custom_colors/font_color = Color( 0.168627, 0.984314, 0.219608, 1 )
+custom_colors/font_color_shadow = Color( 0.976471, 0.0392157, 0.847059, 1 )
+custom_constants/shadow_offset_x = 3
+custom_fonts/font = SubResource( 14 )
+text = "PAUSED"
+align = 1
+valign = 1
+
+[node name="configlist" type="Node2D" parent="configs/config"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="configs/config/configlist"]
+self_modulate = Color( 0.972549, 0.921569, 0.921569, 0.478431 )
+position = Vector2( 24, 207 )
+scale = Vector2( 0.0344669, 312.5 )
+texture = SubResource( 13 )
+
+[node name="on" type="Node2D" parent="configs/config/configlist/Sprite"]
+
+[node name="musicOn" type="TouchScreenButton" parent="configs/config/configlist/Sprite/on"]
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( -614.398, -0.441597 )
+scale = Vector2( 27, 0.003 )
+normal = ExtResource( 21 )
+
+[node name="soundOn" type="TouchScreenButton" parent="configs/config/configlist/Sprite/on"]
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( -614.398, -0.220795 )
+scale = Vector2( 27, 0.003 )
+normal = ExtResource( 22 )
+
+[node name="esq" type="TouchScreenButton" parent="configs/config/configlist/Sprite/on"]
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( -614.398, 0.00961304 )
+scale = Vector2( 17, 0.002 )
+normal = ExtResource( 20 )
+pressed = ExtResource( 18 )
+
+[node name="dir" type="TouchScreenButton" parent="configs/config/configlist/Sprite/on"]
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( 778.241, 0.249542 )
+scale = Vector2( -17, 0.002 )
+normal = ExtResource( 20 )
+pressed = ExtResource( 18 )
+
+[node name="off" type="Node2D" parent="configs/config/configlist/Sprite"]
+
+[node name="musicOff" type="TouchScreenButton" parent="configs/config/configlist/Sprite/off"]
+visible = false
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( -614.398, -0.441597 )
+scale = Vector2( 27, 0.003 )
+normal = ExtResource( 24 )
+
+[node name="soundOff" type="TouchScreenButton" parent="configs/config/configlist/Sprite/off"]
+visible = false
+self_modulate = Color( 1, 1, 1, 0.784314 )
+position = Vector2( -614.398, -0.220795 )
+scale = Vector2( 27, 0.003 )
+normal = ExtResource( 23 )
+
+[connection signal="area_entered" from="ship/Area" to="ship" method="_on_Area_area_entered"]
+[connection signal="timeout" from="cenario/inimigos/spawn_timer" to="cenario/inimigos" method="_on_spawn_timer_timeout"]
+[connection signal="timeout" from="cenario/inimigos/boss_timer" to="cenario/inimigos" method="_on_boss_timer_timeout"]
+[connection signal="timeout" from="cenario/itens/SpawCura" to="cenario/itens" method="_on_SpawCura_timeout"]
+[connection signal="timeout" from="cenario/itens/SpawUpgrade" to="cenario/itens" method="_on_SpawUpgrade_timeout"]
+[connection signal="timeout" from="HUD/Timer" to="HUD" method="_on_Timer_timeout"]
+[connection signal="timeout" from="HUD/contagem/Timer" to="HUD/contagem" method="_on_Timer_timeout"]
+[connection signal="pressed" from="configs/config" to="." method="_on_config_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/on/musicOn" to="." method="_on_musicOn_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/on/soundOn" to="." method="_on_soundOn_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/on/esq" to="." method="_on_esq_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/on/dir" to="." method="_on_dir_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/off/musicOff" to="." method="_on_musicOff_pressed"]
+[connection signal="pressed" from="configs/config/configlist/Sprite/off/soundOff" to="." method="_on_soundOff_pressed"]

@@ -1,0 +1,161 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://sprites/planet.png" type="Texture" id=1]
+[ext_resource path="res://scripts/Start_scene.gd" type="Script" id=2]
+[ext_resource path="res://sprites/Gamepad/background-menu.png" type="Texture" id=3]
+[ext_resource path="res://sprites/Gamepad/botao_menu2AJ3px (1).png" type="Texture" id=4]
+[ext_resource path="res://sprites/Gamepad/botao_ranking23px.png" type="Texture" id=5]
+[ext_resource path="res://sprites/Gamepad/botao_ranking.png" type="Texture" id=6]
+[ext_resource path="res://sprites/Gamepad/botao_off2AJ3px.png" type="Texture" id=7]
+[ext_resource path="res://sprites/Gamepad/botao_menuAJ.png" type="Texture" id=8]
+[ext_resource path="res://sprites/Gamepad/botao_offAJ.png" type="Texture" id=9]
+[ext_resource path="res://scenes/ranking.tscn" type="PackedScene" id=10]
+[ext_resource path="res://sprites/Gamepad/transparentDark22.png" type="Texture" id=11]
+[ext_resource path="res://sprites/Gamepad/shadedDark24.png" type="Texture" id=12]
+[ext_resource path="res://sounds/trilha_menu.mp3" type="AudioStream" id=13]
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "default"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://fonts/prstartk.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+font_data = SubResource( 1 )
+
+[node name="Start_scene" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Background-sheet" type="Sprite" parent="."]
+position = Vector2( 80, 143 )
+texture = ExtResource( 3 )
+
+[node name="anim" type="AnimationPlayer" parent="Background-sheet"]
+autoplay = "default"
+playback_speed = 0.5
+anims/RESET = SubResource( 3 )
+anims/default = SubResource( 4 )
+
+[node name="itens" type="Node2D" parent="."]
+
+[node name="start" type="Node2D" parent="itens"]
+position = Vector2( 52, 100 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="itens/start"]
+visible = false
+custom_colors/font_color = Color( 0.0705882, 0.992157, 0.0823529, 1 )
+custom_colors/font_color_shadow = Color( 0.0588235, 0, 0.776471, 1 )
+custom_constants/shadow_offset_x = 2
+custom_fonts/font = SubResource( 2 )
+text = "START"
+
+[node name="touchstart" type="TouchScreenButton" parent="itens/start"]
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 8 )
+pressed = ExtResource( 4 )
+action = "ui_accept"
+
+[node name="ranking" type="Node2D" parent="itens"]
+position = Vector2( 52, 134 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="itens/ranking"]
+visible = false
+custom_colors/font_color = Color( 0.027451, 0.0627451, 0.929412, 1 )
+custom_colors/font_color_shadow = Color( 0.054902, 0.976471, 0.2, 1 )
+custom_constants/shadow_offset_x = 2
+custom_fonts/font = SubResource( 2 )
+text = "Ranking"
+
+[node name="touchranking" type="TouchScreenButton" parent="itens/ranking"]
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 5 )
+
+[node name="exit" type="Node2D" parent="itens"]
+position = Vector2( 63, 175 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="itens/exit"]
+visible = false
+custom_colors/font_color = Color( 0.901961, 0.0627451, 0.752941, 1 )
+custom_colors/font_color_shadow = Color( 0.952941, 0.917647, 0.054902, 1 )
+custom_constants/shadow_offset_x = 2
+custom_fonts/font = SubResource( 2 )
+text = "Exit"
+
+[node name="touchexit" type="TouchScreenButton" parent="itens/exit"]
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 9 )
+pressed = ExtResource( 7 )
+action = "ui_cancel"
+
+[node name="ranking" parent="." instance=ExtResource( 10 )]
+visible = false
+
+[node name="esc" type="TouchScreenButton" parent="ranking"]
+position = Vector2( 62, 197 )
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 12 )
+pressed = ExtResource( 11 )
+action = "ui_cancel"
+
+[node name="seta" type="Node2D" parent="."]
+visible = false
+position = Vector2( 30, 112 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Planet" type="Sprite" parent="seta"]
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 1 )
+
+[node name="timer_blink" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+autoplay = true
+bus = "Music"
+
+[connection signal="pressed" from="itens/start/touchstart" to="." method="_on_touchstart_pressed"]
+[connection signal="released" from="itens/ranking/touchranking" to="." method="_on_touchranking_released"]
+[connection signal="released" from="itens/exit/touchexit" to="." method="_on_touchexit_released"]
+[connection signal="pressed" from="ranking/esc" to="." method="_on_esc_pressed"]
+[connection signal="timeout" from="timer_blink" to="." method="_on_timer_blink_timeout"]
