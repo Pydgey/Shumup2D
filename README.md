@@ -3,7 +3,7 @@ An pixel art game 2D shmup based
 
 
 ## Download
-[Download Apk for Android](https://drive.google.com/file/d/15xhQQOrhILvJK3WrGPLRGFCQYqpytjHC/view?usp=sharing)
+[Download Apk for Android](https://drive.google.com/file/d/1dvfW9AqtMX2NvCHXVGf01CjvA3LRSatq/view?usp=sharing)
 
 ## Review
 
